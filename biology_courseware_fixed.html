@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>免疫系统组成</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            padding: 10px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            padding: 10px;
+            background: linear-gradient(to right, #3498db, #2ecc71, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        
+        /* 容器布局 */
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        /* 三个区域样式 */
+        .areas {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+            background: rgba(255, 255, 255, 0.8);
+            min-height: 200px;
+        }
+        
+        .area-1 {
+            border-top: 5px solid #3498db;
+        }
+        
+        .area-2 {
+            border-top: 5px solid #ffcc00;
+        }
+        
+        .area-3 {
+            border-top: 5px solid #9b59b6;
+        }
+        
+        .drop-zone {
+            height: 80px;
+            border: 2px dashed #aaa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            color: #777;
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s;
+        }
+        
+        .drop-zone.highlight {
+            background: rgba(100, 200, 100, 0.2);
+            border-color: #2ecc71;
+        }
+        
+        .sub-drop-zones {
+            min-height: 200px;
+            border: 2px dashed #eee;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.6);
+        }
+        
+        .sub-drop-zone {
+            min-height: 50px;
+            border: 1px dashed #ccc;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            color: #888;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s;
+            padding: 5px;
+        }
+        
+        .sub-drop-zone.highlight {
+            background: rgba(100, 200, 255, 0.2);
+            border-color: #3498db;
+        }
+        
+        /* 控制面板样式 */
+        .control-panel {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+        
+        .primary-buttons, .secondary-buttons, .tertiary-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .button-group {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .group-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            text-align: center;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            touch-action: manipulation;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .primary-btn:hover, .primary-btn:active {
+            background: linear-gradient(to bottom, #2980b9, #2573a7);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .secondary-btn {
+            background: linear-gradient(to bottom, #2ecc71, #27ae60);
+            color: white;
+        }
+        
+        .secondary-btn:hover, .secondary-btn:active {
+            background: linear-gradient(to bottom, #27ae60, #219653);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tertiary-btn {
+            background: linear-gradient(to bottom, #9b59b6, #8e44ad);
+            color: white;
+            font-size: 12px;
+            padding: 10px;
+        }
+        
+        .tertiary-btn:hover, .tertiary-btn:active {
+            background: linear-gradient(to bottom, #8e44ad, #7d3c98);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .action-btn {
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+            color: white;
+            margin-top: 8px;
+            font-weight: bold;
+            padding: 14px;
+        }
+        
+        .action-btn:hover, .action-btn:active {
+            background: linear-gradient(to bottom, #c0392b, #a93226);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .action-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .draggable {
+            cursor: move;
+            user-select: none;
+            touch-action: none;
+        }
+        
+        .success-message, .error-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 1000;
+            animation: fadeOut 2s forwards;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 80%;
+        }
+        
+        .success-message {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            color: white;
+        }
+        
+        .error-message {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+        
+        .dropped-item {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 6px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            word-break: break-word;
+        }
+        
+        .dropped-primary {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .dropped-secondary {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            color: white;
+        }
+        
+        .dropped-tertiary {
+            background: linear-gradient(to right, #9b59b6, #8e44ad);
+            color: white;
+            font-size: 12px;
+        }
+        
+        .completion-message {
+            text-align: center;
+            font-size: 16px;
+            color: #2ecc71;
+            font-weight: bold;
+            margin-top: 12px;
+            padding: 8px;
+            border-radius: 5px;
+            background: rgba(46, 204, 113, 0.1);
+        }
+        
+        /* 向日葵动画样式 */
+        .sunflower-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1001;
+            text-align: center;
+            animation: scaleIn 1s forwards;
+            width: 80%;
+            max-width: 300px;
+        }
+        
+        .sunflower {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1/1;
+            margin: 0 auto 15px;
+            position: relative;
+        }
+        
+        .center {
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: #8B4513;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+        
+        .petal {
+            position: absolute;
+            width: 20%;
+            height: 46%;
+            background: #FFD700;
+            border-radius: 60px;
+            top: 50%;
+            left: 50%;
+            transform-origin: center bottom;
+            z-index: 1;
+        }
+        
+        .stem {
+            width: 7%;
+            height: 150px;
+            background: green;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+        
+        .leaf {
+            width: 20%;
+            height: 30px;
+            background: green;
+            border-radius: 60px 0;
+            position: absolute;
+        }
+        
+        .leaf-left {
+            transform: rotate(-45deg);
+            left: 50%;
+            margin-left: -60px;
+            top: 60px;
+        }
+        
+        .leaf-right {
+            transform: rotate(45deg);
+            right: 50%;
+            margin-right: -60px;
+            top: 60px;
+        }
+        
+        .congratulations {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FF8C00;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-top: 15px;
+        }
+        
+        @keyframes scaleIn {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            70% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        @keyframes grow {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes rotate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* 平板和桌面适配 */
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                height: 85vh;
+            }
+            
+            .areas {
+                flex: 3;
+                flex-direction: row;
+            }
+            
+            .control-panel {
+                flex: 1;
+            }
+            
+            .drop-zone {
+                height: 100px;
+            }
+            
+            .sub-drop-zones {
+                min-height: 320px;
+            }
+            
+            .sub-drop-zone {
+                height: 65px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">免疫系统组成</h1>
+    
+    <div class="container">
+        <div class="areas">
+            <div class="area area-1">
+                <div class="drop-zone" id="dropZone1">拖动免疫组成到此区域</div>
+                <div class="sub-drop-zones" id="subDropZones1"></div>
+            </div>
+            <div class="area area-2">
+                <div class="drop-zone" id="dropZone2">拖动免疫组成到此区域</div>
+                <div class="sub-drop-zones" id="subDropZones2"></div>
+            </div>
+            <div class="area area-3">
+                <div class="drop-zone" id="dropZone3">拖动免疫组成到此区域</div>
+                <div class="sub-drop-zones" id="subDropZones3"></div>
+            </div>
+        </div>
+        
+        <div class="control-panel">
+            <div class="button-group">
+                <div class="group-title">一级分类</div>
+                <div class="primary-buttons">
+                    <button class="primary-btn draggable" draggable="true" data-type="primary" data-id="immuneOrgans">免疫器官</button>
+                    <button class="primary-btn draggable" draggable="true" data-type="primary" data-id="immuneCells">免疫细胞</button>
+                    <button class="primary-btn draggable" draggable="true" data-type="primary" data-id="immuneSubstances">免疫活性物质</button>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <div class="group-title">二级分类</div>
+                <div class="secondary-buttons hidden" id="secondaryButtons">
+                    <!-- 二级按钮将通过JS随机排序 -->
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <div class="group-title">三级分类</div>
+                <div class="tertiary-buttons hidden" id="tertiaryButtons">
+                    <!-- 三级按钮将通过JS随机排序 -->
+                </div>
+            </div>
+            
+            <button class="action-btn" id="continueBtn">继续</button>
+            <button class="action-btn" id="cheerBtn">加油</button>
+            <button class="action-btn" id="restartBtn">重新开始</button>
+            
+            <div id="completionMessage" class="completion-message hidden"></div>
+        </div>
+    </div>
+
+    
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const dropZones = [...document.querySelectorAll('.drop-zone')];
+  const subDropZones = [...document.querySelectorAll('.sub-drop-zones')];
+  const secondaryButtonsContainer = document.getElementById('secondaryButtons');
+  const tertiaryButtonsContainer = document.getElementById('tertiaryButtons');
+  const continueBtn = document.getElementById('continueBtn');
+  const cheerBtn = document.getElementById('cheerBtn');
+  const restartBtn = document.getElementById('restartBtn');
+  const completionMessage = document.getElementById('completionMessage');
+
+  const zoneAssignments = { immuneOrgans: null, immuneCells: null, immuneSubstances: null };
+  const placedItems = { primary: {}, secondary: {}, tertiary: {} };
+
+  const secondaryButtonsData = [
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneOrgans', id: 'boneMarrow', text: '骨髓'},
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneOrgans', id: 'thymus', text: '胸腺'},
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneOrgans', id: 'lymphNodes', text: '淋巴结'},
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneOrgans', id: 'tonsils', text: '扁桃体'},
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneOrgans', id: 'spleen', text: '脾'},
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneCells', id: 'macrophages', text: '巨噬细胞'},
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneCells', id: 'dendriticCells', text: '树突状细胞'},
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneCells', id: 'lymphocytes', text: '淋巴细胞'},
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneSubstances', id: 'antibody', text: '抗体'},
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneSubstances', id: 'cytokine', text: '细胞因子'},
+    {class: 'secondary-btn', type: 'secondary', category: 'immuneSubstances', id: 'lysozyme', text: '溶菌酶'}
+  ];
+
+  const tertiaryButtonsData = [
+    {class: 'tertiary-btn', type: 'tertiary', target: 'boneMarrow', id: 'func1', text: '各种免疫细胞发生、分化、发育的场所'},
+    {class: 'tertiary-btn', type: 'tertiary', target: 'thymus', id: 'func2', text: 'T细胞分化、发育、成熟的场所'},
+    {class: 'tertiary-btn', type: 'tertiary', target: 'lymphNodes', id: 'func3', text: '淋巴细胞集中的地方，能阻止和消灭侵入体内的微生物'},
+    {class: 'tertiary-btn', type: 'tertiary', target: 'tonsils', id: 'func4', text: '内部有很多免疫细胞，具有防御功能'},
+    {class: 'tertiary-btn', type: 'tertiary', target: 'spleen', id: 'func5', text: '内含大量的淋巴细胞，参与制造新的血细胞及清除衰老血细胞'},
+    {class: 'tertiary-btn', type: 'tertiary', target: 'lymphocytes', id: 'func6', text: 'T细胞和B细胞'},
+    {class: 'tertiary-btn', type: 'tertiary', target: 'macrophages', id: 'func7', text: '几乎分布于各种组织中，具有吞噬消化、抗原处理和呈递功能'},
+    {class: 'tertiary-btn', type: 'tertiary', target: 'dendriticCells', id: 'func8', text: '分布于上皮组织及淋巴器官内，具有强大的吞噬、呈递抗原功能'},
+    {class: 'tertiary-btn', type: 'tertiary', target: 'antibody', id: 'func9', text: '与抗原专一性结合'},
+    {class: 'tertiary-btn', type: 'tertiary', target: 'cytokine', id: 'func10', text: '主要调节免疫细胞生长、分化，调控免疫应答'},
+    {class: 'tertiary-btn', type: 'tertiary', target: 'lysozyme', id: 'func11', text: '对抗、分解外来细菌'}
+  ];
+
+  function showMessage(type, text){
+    const m = document.createElement('div');
+    m.className = type==='success'?'success-message':'error-message';
+    m.textContent = text;
+    document.body.appendChild(m);
+    setTimeout(()=>m.remove(),1500);
+  }
+
+  function getTextContentById(id, level){
+    const maps={
+      primary:{immuneOrgans:'免疫器官',immuneCells:'免疫细胞',immuneSubstances:'免疫活性物质'},
+      secondary:Object.fromEntries(secondaryButtonsData.map(b=>[b.id,b.text])),
+      tertiary:Object.fromEntries(tertiaryButtonsData.map(b=>[b.id,b.text]))
+    };
+    return maps[level][id];
+  }
+
+  function createSubDropZones(zoneIndex,type){
+    const container=subDropZones[zoneIndex];
+    container.innerHTML='';
+    let count=type==='immuneOrgans'?5:3;
+    for(let i=0;i<count;i++){
+      const z=document.createElement('div');
+      z.className='sub-drop-zone';
+      container.appendChild(z);
+    }
+  }
+
+  // ✅ 新的拖动逻辑：支持触摸+鼠标
+  let dragEl=null, offsetX=0, offsetY=0;
+  function startDrag(e){
+    dragEl=e.currentTarget.cloneNode(true);
+    dragEl.style.position='fixed';
+    dragEl.style.zIndex=9999;
+    dragEl.style.pointerEvents='none';
+    document.body.appendChild(dragEl);
+    const rect=e.currentTarget.getBoundingClientRect();
+    const point=e.touches?e.touches[0]:e;
+    offsetX=point.clientX-rect.left;
+    offsetY=point.clientY-rect.top;
+    moveDrag(e);
+  }
+  function moveDrag(e){
+    if(!dragEl)return;
+    const point=e.touches?e.touches[0]:e;
+    dragEl.style.left=point.clientX-offsetX+'px';
+    dragEl.style.top=point.clientY-offsetY+'px';
+  }
+  function endDrag(e){
+    if(!dragEl)return;
+    const point=e.changedTouches?e.changedTouches[0]:e;
+    const el=document.elementFromPoint(point.clientX,point.clientY);
+    dragEl.remove();
+    const type=e.currentTarget.dataset.type;
+    const id=e.currentTarget.dataset.id;
+    const cat=e.currentTarget.dataset.category;
+    const tgt=e.currentTarget.dataset.target;
+    // 检查落在哪个区域
+    if(el){
+      if(el.classList.contains('drop-zone')){
+        const i=dropZones.indexOf(el);
+        handlePrimaryDrop(i,id);
+      }else if(el.classList.contains('sub-drop-zone')){
+        const i=subDropZones.findIndex(c=>c.contains(el));
+        if(type==='secondary')handleSecondaryDrop(i,id,cat);
+        else if(type==='tertiary')handleTertiaryDrop(i,id,tgt);
+      }else{
+        showMessage('error','放置位置不正确');
+      }
+    }
+    dragEl=null;
+  }
+
+  function bindDraggable(btn){
+    btn.addEventListener('mousedown',startDrag);
+    btn.addEventListener('touchstart',startDrag);
+    window.addEventListener('mousemove',moveDrag);
+    window.addEventListener('touchmove',moveDrag);
+    window.addEventListener('mouseup',endDrag);
+    window.addEventListener('touchend',endDrag);
+  }
+
+  function initDragButtons(){
+    document.querySelectorAll('.draggable').forEach(bindDraggable);
+  }
+
+  // 放置逻辑同原版（简化）
+  function handlePrimaryDrop(zoneIndex,id){
+    if(zoneAssignments[id]!=null)return;
+    zoneAssignments[id]=zoneIndex;
+    const item=document.createElement('div');
+    item.className='dropped-item dropped-primary';
+    item.textContent=getTextContentById(id,'primary');
+    dropZones[zoneIndex].innerHTML='';
+    dropZones[zoneIndex].appendChild(item);
+    createSubDropZones(zoneIndex,id);
+    document.querySelector(`[data-id="${id}"]`)?.remove();
+    showMessage('success','你真棒！');
+    if(Object.values(zoneAssignments).every(v=>v!=null)){
+      completionMessage.textContent="一级分类完成！请点击'继续'";
+      completionMessage.classList.remove('hidden');
+      continueBtn.disabled=false;
+    }
+  }
+
+  function handleSecondaryDrop(zoneIndex,id,cat){
+    const right=zoneAssignments[cat];
+    if(right!==zoneIndex){showMessage('error','出错了！');return;}
+    placedItems.secondary[id]=true;
+    const item=document.createElement('div');
+    item.className='dropped-item dropped-secondary';
+    item.dataset.id=id;
+    item.textContent=getTextContentById(id,'secondary');
+    const zones=subDropZones[zoneIndex].querySelectorAll('.sub-drop-zone');
+    const target=[...zones].find(z=>!z.firstChild);
+    if(target)target.appendChild(item);
+    document.querySelector(`[data-id="${id}"]`)?.remove();
+    showMessage('success','好棒！');
+    if(document.querySelectorAll('.secondary-btn').length===0){
+      completionMessage.textContent="二级分类完成！请点击'加油'";
+      cheerBtn.disabled=false;
+    }
+  }
+
+  function handleTertiaryDrop(zoneIndex,id,tgt){
+    const container=subDropZones[zoneIndex];
+    const has=container.querySelector(`[data-id="${tgt}"]`);
+    if(!has){showMessage('error','位置不对');return;}
+    const item=document.createElement('div');
+    item.className='dropped-item dropped-tertiary';
+    item.textContent=getTextContentById(id,'tertiary');
+    has.parentNode.appendChild(item);
+    document.querySelector(`[data-id="${id}"]`)?.remove();
+    showMessage('success','太棒了！');
+    if(document.querySelectorAll('.tertiary-btn').length===0){
+      completionMessage.textContent="全部完成！";
+    }
+  }
+
+  function shuffle(a){return a.sort(()=>Math.random()-0.5);}
+  function createButtons(c,arr){
+    c.innerHTML='';
+    shuffle(arr).forEach(d=>{
+      const b=document.createElement('button');
+      b.className=d.class+' draggable';
+      b.textContent=d.text;
+      Object.entries(d).forEach(([k,v])=>b.dataset[k]=v);
+      c.appendChild(b);
+    });
+    initDragButtons();
+  }
+
+  continueBtn.onclick=function(){
+    createButtons(secondaryButtonsContainer,secondaryButtonsData);
+    secondaryButtonsContainer.classList.remove('hidden');
+    continueBtn.disabled=true;
+  };
+  cheerBtn.onclick=function(){
+    createButtons(tertiaryButtonsContainer,tertiaryButtonsData);
+    tertiaryButtonsContainer.classList.remove('hidden');
+    cheerBtn.disabled=true;
+  };
+  restartBtn.onclick=()=>location.reload();
+  initDragButtons();
+  continueBtn.disabled=true;
+  cheerBtn.disabled=true;
+});
+</script>
+
+</body>
+</html>
