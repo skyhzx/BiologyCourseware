@@ -815,10 +815,11 @@ function handleTertiaryDrop(e, zoneIndex, id, target) {
     // 先尝试在当前 zoneIndex 下找到对应二级项目
     const subZoneContainer = subDropZones[zoneIndex];
     let targetElement = subZoneContainer.querySelector(`[data-id="${target}"]`);
-
+    conslog('errorT',targetElement)
     // 如果当前区域没有匹配的目标二级项目，则再全局查找
     if (!targetElement) {
         for (let i = 0; i < subDropZones.length; i++) {
+             conslog('foreachData==',subDropZones[i],`[data-id="${target}"]`)
             const found = subDropZones[i].querySelector(`[data-id="${target}"]`);
             if (found) {
                 targetElement = found;
