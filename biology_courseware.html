@@ -718,7 +718,7 @@
                     matchedZoneIndex = dropZones.indexOf(targetElement);
                     finalLevel = 'primary';
                 } else if (targetElement.classList.contains('sub-drop-zone') || targetElement.closest('.sub-drop-zone')) {
-                    const subEl = targetElement.closest('.sub-drop-zone');
+                    const subEl = targetElement.closest('.sub-drop-zone') || targetElement;
                     matchedZoneIndex = subDropZones.findIndex(z => z.contains(subEl));
                     
                     // 根据被拖拽元素的类型来决定最终级别
@@ -728,6 +728,20 @@
                         finalLevel = 'secondary';
                     } else {
                         finalLevel = 'secondary'; // 默认
+                    }
+                } else if (targetElement.classList.contains('dropped-item') && type === 'tertiary') {
+                    // 特殊处理：当三级项被拖拽到已放置的二级项上时
+                    const container = targetElement.closest('.sub-drop-zone');
+                    if (container) {
+                        matchedZoneIndex = subDropZones.findIndex(z => z.contains(container));
+                        finalLevel = 'tertiary';
+                        
+                        // 验证目标是否正确
+                        if (targetElement.dataset.id !== target) {
+                            showMessage('error', '出错了，加油！');
+                            draggedElement = null;
+                            return;
+                        }
                     }
                 }
                 
@@ -739,7 +753,7 @@
                     } else if (finalLevel === 'secondary') {
                         handleSecondaryDrop(e, matchedZoneIndex, id, category);
                     } else if (finalLevel === 'tertiary') {
-                        handleTertiaryDrop(e, matchedZoneIndex, id, target);
+                        handleTertiaryDrop(e, matchedZoneIndex, id, target, targetElement);
                     }
                 } else {
                     showMessage('error', '放置位置不正确');
@@ -780,7 +794,11 @@
                 } else if (level === 'secondary') {
                     handleSecondaryDrop(e, zoneIndex, id, category);
                 } else if (level === 'tertiary') {
-                    handleTertiaryDrop(e, zoneIndex, id, target);
+                    // 获取放置位置的元素以进行精确验证
+                    const dropX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+                    const dropY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+                    const targetElement = document.elementFromPoint(dropX, dropY);
+                    handleTertiaryDrop(e, zoneIndex, id, target, targetElement);
                 }
             }
 
@@ -869,8 +887,8 @@
                 }
             }
 
-            // 处理三级按钮放置
-            function handleTertiaryDrop(e, zoneIndex, id, target) {
+            // 处理三级按钮放置 - 修复版
+            function handleTertiaryDrop(e, zoneIndex, id, target, targetElement) {
                 // 确保target存在
                 if (!target) {
                     console.log("target is missing")
@@ -878,32 +896,52 @@
                     return;
                 }
 
-                // 直接在整个文档中查找目标二级元素
-                let targetElement = null;
+                // 查找目标二级元素（通过ID精确匹配）
+                let targetSecondaryElement = null;
                 
-                // 遍历所有子区域容器来查找目标元素
+                // 在所有子区域中查找具有指定ID的二级元素
                 for (let i = 0; i < subDropZones.length; i++) {
-                    const element = subDropZones[i].querySelector(`[data-id="${target}"]`);
+                    const element = subDropZones[i].querySelector(`.dropped-item[data-id="${target}"]`);
                     if (element) {
-                        targetElement = element;
-                        break; // 找到了就停止查找
+                        targetSecondaryElement = element;
+                        break;
                     }
                 }
 
-                // 如果找不到目标元素，显示错误消息
-                if (!targetElement) {
-                    console.log("targetElement is missing")
-                    showMessage('error', '出错了，加油！');
+                // 如果找不到目标二级元素，说明还未放置该二级项
+                if (!targetSecondaryElement) {
+                    showMessage('error', '请先放置对应的二级分类');
                     return;
                 }
 
-                // 验证是否放置在正确的区域
-                // 获取目标二级元素所在的区域索引
-                const targetZoneContainer = targetElement.closest('.sub-drop-zones');
+                // 验证是否放置在正确的区域（必须与目标二级元素在同一区域）
+                const targetZoneContainer = targetSecondaryElement.closest('.sub-drop-zones');
                 const targetZoneIndex = Array.from(subDropZones).indexOf(targetZoneContainer);
                 
                 // 检查当前放置的区域是否与目标区域一致
                 if (zoneIndex !== targetZoneIndex) {
+                    showMessage('error', '出错了，加油！');
+                    return;
+                }
+
+                // 关键验证：检查是否放置在正确的二级项上
+                let isCorrectTarget = false;
+                
+                // 对于鼠标拖拽，检查放置位置的元素
+                if (targetElement) {
+                    // 如果直接放置在目标二级项上
+                    if (targetElement.classList.contains('dropped-item') && 
+                        targetElement.dataset.id === target) {
+                        isCorrectTarget = true;
+                    }
+                    // 如果放置在目标二级项的直接容器中
+                    else if (targetElement === targetSecondaryElement.parentNode) {
+                        isCorrectTarget = true;
+                    }
+                }
+
+                // 如果仍然不匹配，则显示错误
+                if (!isCorrectTarget) {
                     showMessage('error', '出错了，加油！');
                     return;
                 }
@@ -918,7 +956,7 @@
                 item.dataset.id = id;
 
                 // 将三级项目添加到目标二级项目的同一个父容器中
-                targetElement.parentNode.appendChild(item);
+                targetSecondaryElement.parentNode.appendChild(item);
 
                 // 从控制面板中移除被拖拽的按钮
                 const draggedButton = document.querySelector(`.tertiary-buttons [data-id="${id}"]`);
@@ -1051,59 +1089,28 @@
                 }
             }
 
-            // 显示向日葵动画和鼓励话语
-            function showSunflowerAnimation() {
-                const sunflowerContainer = document.createElement('div');
-                sunflowerContainer.className = 'sunflower-container';
+          // 显示鼓励话语
+function showSunflowerAnimation() {
+    // 创建容器
+    const messageContainer = document.createElement('div');
+    messageContainer.className = 'sunflower-container';
 
-                const sunflower = document.createElement('div');
-                sunflower.className = 'sunflower';
+    // 添加鼓励话语
+    const congratulations = document.createElement('div');
+    congratulations.className = 'congratulations';
+    congratulations.textContent = '恭喜你完成了所有内容！';
+    messageContainer.appendChild(congratulations);
 
-                // 创建向日葵中心
-                const center = document.createElement('div');
-                center.className = 'center';
+    // 添加到页面
+    document.body.appendChild(messageContainer);
 
-                // 创建花瓣
-                for (let i = 0; i < 12; i++) {
-                    const petal = document.createElement('div');
-                    petal.className = 'petal';
-                    petal.style.transform = `translate(-50%, -50%) rotate(${i * 30}deg)`;
-                    sunflower.appendChild(petal);
-                }
-
-                sunflower.appendChild(center);
-
-                // 创建茎和叶子
-                const stem = document.createElement('div');
-                stem.className = 'stem';
-
-                const leafLeft = document.createElement('div');
-                leafLeft.className = 'leaf leaf-left';
-
-                const leafRight = document.createElement('div');
-                leafRight.className = 'leaf leaf-right';
-
-                sunflowerContainer.appendChild(sunflower);
-                sunflowerContainer.appendChild(stem);
-                sunflowerContainer.appendChild(leafLeft);
-                sunflowerContainer.appendChild(leafRight);
-
-                // 添加鼓励话语
-                const congratulations = document.createElement('div');
-                congratulations.className = 'congratulations';
-                congratulations.textContent = '恭喜你完成了所有内容！';
-                sunflowerContainer.appendChild(congratulations);
-
-                document.body.appendChild(sunflowerContainer);
-
-                // 5秒后移除动画
-                setTimeout(() => {
-                    if (document.body.contains(sunflowerContainer)) {
-                        document.body.removeChild(sunflowerContainer);
-                    }
-                }, 5000);
-            }
-
+    // 5秒后移除
+    setTimeout(() => {
+        if (document.body.contains(messageContainer)) {
+            document.body.removeChild(messageContainer);
+        }
+    }, 5000);
+}
             // 事件监听器
             continueBtn.addEventListener('click', function () {
                 // 显示二级按钮
